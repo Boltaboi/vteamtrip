@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VTEAMTRIP</title>
+  <meta name="description" content="Vteamtrip — планировщик групповых поездок. Маршрут, бюджет, задачи. Путешествуйте без забот!" />
+  <meta property="og:title" content="VTEAMTRIP" />
+  <meta property="og:description" content="Всё для совместных поездок в одном приложении: маршрут, бюджет, задачи." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #0b0f1a;
+      --bg-card: #121826;
+      --text: #ffffff;
+      --text-muted: #a0aec0;
+      --accent: #5b8cff;
+      --accent-hover: #4a7aef;
+      --gradient: linear-gradient(135deg, #5b8cff 0%, #7c5cfc 100%);
+      --radius: 20px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Manrope', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    img { max-width: 100%; height: auto; display: block; }
+
+    .container {
+      width: 100%;
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    /* Header */
+    header {
+      padding: 24px 0;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(11, 15, 26, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .header-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      font-size: 1.25rem;
+      letter-spacing: 0.02em;
+    }
+    .logo img { height: 36px; width: auto; }
+
+    /* Hero */
+    .hero {
+      padding: 72px 0 80px;
+      text-align: center;
+    }
+    .hero h1 {
+      font-size: clamp(1.75rem, 4.5vw, 2.75rem);
+      font-weight: 700;
+      line-height: 1.2;
+      max-width: 820px;
+      margin: 0 auto 16px;
+    }
+    .hero .subtitle {
+      font-size: clamp(1.05rem, 2.2vw, 1.25rem);
+      color: var(--text-muted);
+      max-width: 560px;
+      margin: 0 auto 36px;
+      font-weight: 400;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 16px 36px;
+      border-radius: 999px;
+      font-weight: 600;
+      font-size: 1rem;
+      background: var(--gradient);
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 8px 24px rgba(91, 140, 255, 0.35);
+    }
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 32px rgba(91, 140, 255, 0.45);
+    }
+    .hero-mockup {
+      margin-top: 56px;
+      max-width: 720px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .hero-mockup img {
+      border-radius: 24px;
+      box-shadow: 0 30px 60px rgba(0,0,0,0.45);
+    }
+
+    /* Section common */
+    section { padding: 72px 0; }
+    .section-title {
+      font-size: clamp(1.5rem, 3.5vw, 2.1rem);
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 48px;
+    }
+
+    /* Features */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 24px;
+    }
+    .feature-card {
+      background: var(--bg-card);
+      border-radius: var(--radius);
+      padding: 28px 24px;
+      border: 1px solid rgba(255,255,255,0.06);
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .feature-card:hover {
+      border-color: rgba(91, 140, 255, 0.35);
+      transform: translateY(-4px);
+    }
+    .feature-card img {
+      width: 64px;
+      height: 64px;
+      object-fit: contain;
+      margin-bottom: 18px;
+    }
+    .feature-card h3 {
+      font-size: 1.15rem;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+    .feature-card p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      line-height: 1.55;
+    }
+
+    /* Steps */
+    .steps {
+      background: linear-gradient(180deg, transparent, rgba(91,140,255,0.04), transparent);
+    }
+    .steps-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 28px;
+      counter-reset: step;
+    }
+    .step {
+      position: relative;
+      padding: 24px 20px 24px 72px;
+      background: var(--bg-card);
+      border-radius: var(--radius);
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+    .step::before {
+      counter-increment: step;
+      content: counter(step);
+      position: absolute;
+      left: 20px;
+      top: 24px;
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      background: var(--gradient);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 1.1rem;
+    }
+    .step h3 {
+      font-size: 1.05rem;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    .step p {
+      color: var(--text-muted);
+      font-size: 0.92rem;
+    }
+
+    /* CTA */
+    .cta {
+      text-align: center;
+      padding: 80px 0;
+    }
+    .cta h2 {
+      font-size: clamp(1.4rem, 3vw, 1.9rem);
+      font-weight: 700;
+      max-width: 640px;
+      margin: 0 auto 16px;
+    }
+    .cta p {
+      color: var(--text-muted);
+      margin-bottom: 32px;
+      max-width: 480px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid rgba(255,255,255,0.08);
+      padding: 40px 0 32px;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 32px;
+      align-items: start;
+    }
+    .footer-brand {
+      max-width: 360px;
+    }
+    .footer-brand .logo {
+      margin-bottom: 12px;
+      color: var(--text);
+    }
+    .footer-brand p { margin-bottom: 8px; }
+    .footer-links {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      align-items: flex-end;
+      text-align: right;
+    }
+    .footer-links a:hover { color: var(--accent); }
+    .socials {
+      display: flex;
+      gap: 12px;
+      margin-top: 16px;
+      justify-content: flex-end;
+    }
+    .socials a {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.06);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s, transform 0.2s;
+    }
+    .socials a:hover {
+      background: rgba(91, 140, 255, 0.25);
+      transform: scale(1.08);
+    }
+    .socials svg { width: 20px; height: 20px; fill: currentColor; }
+    .footer-bottom {
+      margin-top: 28px;
+      padding-top: 20px;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 12px;
+      font-size: 0.85rem;
+    }
+    .footer-bottom a:hover { color: var(--accent); }
+
+    @media (max-width: 640px) {
+      .footer-grid {
+        grid-template-columns: 1fr;
+      }
+      .footer-links, .socials {
+        align-items: flex-start;
+        text-align: left;
+        justify-content: flex-start;
+      }
+      .step { padding-left: 68px; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="container header-inner">
+      <a href="/" class="logo">
+        <img src="https://static.tildacdn.com/tild6365-3636-4566-a362-643738653838/logo.png" alt="Vteamtrip" width="36" height="36" />
+        VTEAMTRIP
+      </a>
+    </div>
+  </header>
+
+  <main>
+    <!-- Hero -->
+    <section class="hero">
+      <div class="container">
+        <h1>Всё для совместных поездок в одном приложении: маршрут, бюджет, задачи. Путешествуйте без забот!</h1>
+        <p class="subtitle">Планировать групповое путешествие проще, чем когда-либо!</p>
+        <a class="btn" href="https://disk.yandex.ru/d/EvyxaZZyjGQ24A" target="_blank" rel="noopener noreferrer">
+          СКАЧАТЬ БЕСПЛАТНО
+        </a>
+        <div class="hero-mockup">
+          <img src="https://static.tildacdn.com/tild6461-3534-4135-a430-666366306162/Mockuphome_1.png" alt="Скриншот приложения Vteamtrip" width="720" height="auto" loading="eager" />
+        </div>
+      </div>
+    </section>
+
+    <!-- Features -->
+    <section>
+      <div class="container">
+        <h2 class="section-title">Все, что нужно для вашего путешествия</h2>
+        <div class="features-grid">
+          <article class="feature-card">
+            <img src="https://static.tildacdn.com/tild3462-6638-4565-b032-343232353438/s1.png" alt="" width="64" height="64" loading="lazy" />
+            <h3>Ваш маршрут — всегда под рукой</h3>
+            <p>Создавайте и редактируйте маршруты с важными точками и достопримечательностями. Путешествуйте по своему плану.</p>
+          </article>
+          <article class="feature-card">
+            <img src="https://static.tildacdn.com/tild3531-6264-4137-a633-326266373937/s2.png" alt="" width="64" height="64" loading="lazy" />
+            <h3>Контроль расходов без лишних сложностей</h3>
+            <p>Отслеживайте и делитесь расходами в режиме реального времени. Никаких сюрпризов — все траты под контролем.</p>
+          </article>
+          <article class="feature-card">
+            <img src="https://static.tildacdn.com/tild6163-3762-4665-b738-323065626638/s3.png" alt="" width="64" height="64" loading="lazy" />
+            <h3>Организация задач для команды</h3>
+            <p>Распределяйте задачи между участниками поездки и следите за их выполнением, чтобы ничего не упустить.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Steps -->
+    <section class="steps">
+      <div class="container">
+        <h2 class="section-title">Путешествие в 4 шага</h2>
+        <div class="steps-list">
+          <div class="step">
+            <h3>Зарегистрируйтесь и создайте маршрут</h3>
+            <p>Создайте свой первый маршрут, выбрав основные точки назначения, интересные места и даты.</p>
+          </div>
+          <div class="step">
+            <h3>Пригласите друзей для совместного планирования</h3>
+            <p>Добавьте друзей или коллег, чтобы вместе организовать поездку.</p>
+          </div>
+          <div class="step">
+            <h3>Отслеживайте расходы и распределяйте задачи</h3>
+            <p>Составьте бюджет и распределите расходы по категориям. Добавьте задачи для участников.</p>
+          </div>
+          <div class="step">
+            <h3>Определитесь с жильём и транспортом</h3>
+            <p>Обозначьте место проживания и способ передвижения. Все участники увидят информацию и смогут предложить свои варианты.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta">
+      <div class="container">
+        <h2>Мы работаем над тем, чтобы вы могли организовывать поездки прямо с вашего смартфона</h2>
+        <p>Оставайтесь на связи и будьте первыми, кто оценит удобство нашего приложения!</p>
+        <a class="btn" href="https://disk.yandex.ru/d/EvyxaZZyjGQ24A" target="_blank" rel="noopener noreferrer">
+          СКАЧАТЬ БЕСПЛАТНО
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="/" class="logo">
+            <img src="https://static.tildacdn.com/tild6365-3636-4566-a362-643738653838/logo.png" alt="Vteamtrip" width="32" height="32" />
+            VTEAMTRIP
+          </a>
+          <p>Команда Vteamtrip — идеальные путешествия с командой</p>
+          <p>ООО «ВТЕАМТРИП ПЛАТФОРМА»<br>ОГРН 1240200040310<br>ИНН 0272928162</p>
+        </div>
+        <div class="footer-links">
+          <a href="mailto:vteamtrip.help@yandex.ru">vteamtrip.help@yandex.ru</a>
+          <a href="https://t.me/Boltaboi" target="_blank" rel="noopener noreferrer">Разработка сайта — @Boltaboi</a>
+          <div class="socials">
+            <a href="https://t.me/vteamtrip" target="_blank" rel="noopener noreferrer" aria-label="Telegram">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.14.18-.357.295-.6.295-.002 0-.003 0-.005 0l.213-3.054 5.56-5.022c.24-.213-.054-.334-.373-.121l-6.869 4.326-2.96-.924c-.64-.203-.658-.64.135-.954l11.566-4.458c.538-.196 1.006.128.834.941z"/></svg>
+            </a>
+            <a href="https://vk.ru/vteamtrip" target="_blank" rel="noopener noreferrer" aria-label="ВКонтакте">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12.785 16.241s.288-.032.436-.194c.136-.148.132-.427.132-.427s-.02-1.304.586-1.496c.596-.19 1.363 1.26 2.174 1.818.613.422 1.078.33 1.078.33l2.163-.03s1.13-.07.594-.96c-.044-.073-.312-.658-1.61-1.86-1.36-1.26-1.177-.105.46-2.55.999-1.49 1.398-2.4 1.272-2.79-.12-.372-.86-.274-.86-.274l-2.43.015s-.18-.025-.314.055c-.13.078-.214.26-.214.26s-.383 1.02-.893 1.888c-1.076 1.83-1.507 1.927-1.683 1.813-.41-.266-.307-1.068-.307-1.638 0-1.78.27-2.52-.526-2.713-.264-.064-.458-.106-1.133-.113-.866-.009-1.6.003-2.015.208-.276.136-.49.44-.36.457.161.021.525.098.718.362.25.34.24 1.104.24 1.104s.143 2.11-.333 2.371c-.326.18-.773-.187-1.734-1.862-.492-.86-.863-1.81-.863-1.81s-.071-.175-.198-.27c-.154-.114-.37-.15-.37-.15l-2.31.014s-.347.01-.474.16c-.113.134-.009.41-.009.41s1.8 4.21 3.838 6.33c1.87 1.945 3.995 1.817 3.995 1.817h.964z"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2024–2026 Vteamtrip</span>
+        <a href="#">Политика конфиденциальности</a>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
